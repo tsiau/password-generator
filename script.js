@@ -13,101 +13,134 @@ var randomFunction = {
   upper: getRandomUpper,
   lower: getRandomLower,
   number: getRandomNumber,
-  synbol: getRandomSymbol,
+  symbol: getRandomSymbol,
 };
 
 // Generator functions - https://net-comber.com/charset.html
 
-function getRandomUpper () {
+function getRandomUpper() {
   return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
 }
 
-function getRandomLower () {
+function getRandomLower() {
   return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
 }
 
-function getRandomNumber () {
+function getRandomNumber() {
   return String.fromCharCode(Math.floor(Math.random() * 10) + 48);
 }
 
-function getRandomSymbol () {
-  var symbols = '!@#$%^&*(){}+<>/,.'
-  return symbols[Math.floor(Math.random()* symbols.length)];
+function getRandomSymbol() {
+  var symbols = '!@#$%^&*(){}+<>/,.';
+  return symbols[Math.floor(Math.random() * symbols.length)];
 }
 
-// Get references to the #generate element
-var generateBtn = document.querySelector("#generate");
+var randomFunction = {
+  upper: getRandomUpper,
+  lower: getRandomLower,
+  number: getRandomNumber,
+  symbol: getRandomSymbol,
+};
 
-// Write password to the #password input
-function writePassword() {
-  var password = generatePassword();
-  var passwordText = document.querySelector("#password");
+// Get references to the elements
+var resultElement = document.getElementById('result');
+var passwordTextElement = document.getElementById('password-text');
+var lengthElement = document.getElementById('length');
+var uppercaseElement = document.getElementById('uppercase');
+var lowercaseElement = document.getElementById('lowercase');
+var numbersElement = document.getElementById('numbers');
+var symbolsElement = document.getElementById('symbols');
+var generateElement = document.getElementById('generate');
+var clipboardElement = document.getElementById('clipboard-btn');
 
-  passwordText.value = password;
+// Generate password function
+function generatePassword(lower, upper, number, symbol, length) {
+  var generatedPassword = '';
 
+  var typesCount = lower + upper + number + symbol;
+  var typesArray = [
+    { upper },
+    { lower },
+    { number },
+    { symbol }
+  ].filter(item => Object.values(item)[0]);
+
+  if (typesCount === 0) {
+    return '';
+  }
+
+  for (var i = 0; i < length; i += typesCount) {
+    typesArray.forEach(type => {
+      var funcName = Object.keys(type)[0];
+      var func = randomFunction[funcName];
+      generatedPassword += func();
+    });
+  }
+
+  var finalPassword = generatedPassword.slice(0, length);
+  return finalPassword;
 }
-// Add event listener to generate button
 
+// Event listeners
 generateElement.addEventListener('click', () => {
-  var length = lengthElement.value;
+  var length = parseInt(lengthElement.value);
   var hasLower = lowercaseElement.checked;
   var hasUpper = uppercaseElement.checked;
   var hasNumber = numbersElement.checked;
   var hasSymbols = symbolsElement.checked;
 
-  generatePassword(hasLower, hasUpper, hasNumber, hasSymbols);
-});
-
-// Copy password to clipboard
-
-clipboardElement.addEventListener('click', () => {
-  var textArea = document.createElement('textarea');
-  var password = resultElement.innerText;
-
-  if(!password) {
+  if (isNaN(length) || length < 8 || length > 128) {
+    alert('Please enter a valid password length between 8 and 128.');
     return;
   }
 
-  textArea.value = password;
-  document.body.appendChild(textArea);
-  textArea.select();
-  document.execCommand('copy');
-  textArea.remove();
-  alert('Password copied to clipboard!');
-})
+  var password = generatePassword(hasLower, hasUpper, hasNumber, hasSymbols, length);
+  passwordTextElement.innerText = password; // Update password text
 
-// Selecting what you want in the password 
-
-generateBtn.addEventListener('click', () => {
-var length = +lengthElement.value;
-var hasUpper = uppercaseElement.checked;
-var hasLower = lowercaseElement.checked;
-var hasNumber = numbersElement.checked;
-var hasSymbols = symbolsElement.checked;
-
-resultElement.innerText = generatePassword(hasUpper, hasLower, hasNumber, hasSymbols, length);
+  if (!password) {
+    clipboardElement.disabled = true;
+  } else {
+    clipboardElement.disabled = false;
+  }
 });
+
+clipboardElement.addEventListener('click', () => {
+  var password = passwordTextElement.innerText;
+
+  if (!password) {
+    return;
+  }
+
+  navigator.clipboard.writeText(password)
+    .then(() => {
+      alert('Password copied to clipboard!');
+    })
+    .catch(err => {
+      console.error('Failed to copy password: ', err);
+    });
+});
+
 
 // Generate password function
 function generatePassword(lower, upper, number, symbol, length) {
-  let generatePassword = '';
+  let generatedPassword = '';
   var typesCount = lower + upper + number + symbol;
-  //console.log('typesCount: ', typesCount);
-  var typesArray = [{upper}, {lower}, {number}, {symbols}];
-  (
-    item => Object.values(item)[0]);
-  //console.log('typesArray: ', typesArray);
-  if(typesCount === 0) {
+  var typesArray = [{ upper }, { lower }, { number }, { symbol }].filter(item => Object.values(item)[0]);
+
+  // Does not have a selected type
+  if (typesCount === 0) {
     return '';
   }
-// loop
-    for(let i=0; i< length; i += typesCount) {
-      typesArray.forEach(type => {
-        var functionName = Object.keys(type)[0];
-        console.log('functionName: ', functionName);
-        generatePassword += randomFunction[functionName]();
-      });
-    }
-  var finalPassword = generatePassword.slice(0, length);
+
+  // Loop
+  for (let i = 0; i < length; i += typesCount) {
+    typesArray.forEach(type => {
+      var funcName = Object.keys(type)[0];
+      var func = randomFunction[funcName];
+      generatedPassword += func(); // Concatenate the generated character
+    });
+  }
+
+  const finalPassword = generatedPassword.slice(0, length);
   return finalPassword;
-    }
+}

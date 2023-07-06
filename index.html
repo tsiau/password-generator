@@ -1,57 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Password Generator</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="script.js" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1>Password Generator</h1>
-      </header>
-      <div class="card">
-        <div class="card-header">
-          <h2>Generate a Password</h2>
-        </div>
-        <div class="card-body">
-          <div class="result-container">
-            <span id="result"></span>
-            <button class="clipboard" id="clipboard">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Password Generator</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <h1>Password Generator</h1>
+    </header>
+    <div class="card">
+      <div class="card-header">
+        <h2>Generate a Password</h2>
+      </div>
+      <div class="card-body">
+        <div class="result-container">
+          <div id="result">
+            <span id="password-text"></span>
+            <!-- Clipboard icon -->
+            <button class="clipboard" id="clipboard-btn">
               <i class="fa fa-clipboard" aria-hidden="true"></i>
             </button>
           </div>
-        </div>
+        </div>             
         <div class="settings">
-          <label>Password length</label>
-          <input type="number"
-          id="length" min="8" max="128" value=""/>
-          <div class="settings">
+          <div class="setting">
+            <label>Password length</label>
+            <input type="number" id="length" min="8" max="128" value=""/>
+          </div>
+          <div class="setting checkboxes">
             <label>Include uppercase letters</label>
-            <input type="checkbox"
-            id="uppercase"/>
-            <div class="settings">
-              <label>Include lowercase letters</label>
-              <input type="checkbox"
-              id="lowercase"/>
-              <div class="settings">
-                <label>Include numbers</label>
-                <input type="checkbox"
-                id="numbers"/>
-                <div class="settings">
-                  <label>Include symbols</label>
-                  <input type="checkbox"
-                  id="symbols"/>
+            <input type="checkbox" id="uppercase" />
+          </div>
+          <div class="setting checkboxes">
+            <label>Include lowercase letters</label>
+            <input type="checkbox" id="lowercase"/>
+          </div>
+          <div class="setting checkboxes">
+            <label>Include numbers</label>
+            <input type="checkbox" id="numbers"/>
+          </div>
+          <div class="setting checkboxes">
+            <label>Include symbols</label>
+            <input type="checkbox" id="symbols"/>
+          </div>
         </div>
         <div class="card-footer">
           <button id="generate" class="btn">Generate Password</button>
         </div>
       </div>
-    </div>
-    <script src="script.js"></script>
-  </body>
+  </div>
+  <script src="script.js"></script>
+</body>
 </html>
